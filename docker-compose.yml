@@ -1,0 +1,35 @@
+version: '3'
+services:
+  getmatch-urlshortener-service:
+    build:
+      dockerfile: conf/Dockerfile
+      context: ./
+    # command: python -m service
+    command: gunicorn --reload service.app
+    volumes:
+      - type: bind
+        source: ./src/
+        target: /app
+    networks:
+      - getmatch-urlshortener-service-network
+    env_file:
+      - conf/env/app.dev.env
+      - conf/env/db.dev.env
+    ports:
+      - 9050:9050
+    # depends_on:
+    #   service-db:
+    #     condition: service_healthy
+  
+  service-db:
+    image: mongo
+    restart: always
+    networks:
+      - getmatch-urlshortener-service-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+networks:
+  getmatch-urlshortener-service-network:
+    driver: bridge

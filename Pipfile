@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "==2.27.1"
+pymongo = "==4.1.1"
+falcon = "==3.1.0"
+pydantic = "==1.9.0"
+gunicorn = "==20.1.0"
+
+[dev-packages]
+autoflake = "==1.4"
+ipython = "==8.2.0"
+mypy = "==0.942"
+coverage = "==6.3.2"
+ipdb = "==0.13.9"
+pre-commit = "==2.18.1"
+pyflakes = "==2.4.0"
+pylint = "==2.13.5"
+pylint-quotes = "==0.2.3"
+
+[requires]
+python_version = "3.9"
