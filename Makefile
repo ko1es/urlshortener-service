@@ -1,11 +1,7 @@
 APP_NAME=`cat project.name`
-DCE = docker-compose exec ${APP_NAME}
-PROJECT_PY_FILES=`cd src && find . -type f -regex "^.*.py" -not -path ./${DEST_DIRECTORY}/\* -not -path ./${PROTO_DIRECTORY}/\* -not -path ./shared/\*`
+PROJECT_PY_FILES=`cd src && find . -type f -regex "^.*.py" -not -path ./${DEST_DIRECTORY}/\* -not -path ./${PROTO_DIRECTORY}/\*
 
-LOCAL_IMAGE = ${APP_NAME}-service
-
-all:  build up
-
+all:  build up restart down logs pre-commit ipython bash
 
 .PHONY: build
 build:
@@ -26,24 +22,25 @@ restart:
 	@docker-compose restart
 	@echo Done restart
 
-
 .PHONY: down
 down:
 	@#@ Runs docker-compose down
 	@docker-compose down -v
 	@echo Done down
 
-
 .PHONY: logs
 logs:
 	@#@ Runs logs from docker
 	@docker-compose logs -f
 
-.PHONY: bash
-bash:
-	@#@ Runs bash in container
-	@${DCE} bash
-
 .PHONY: pre-commit
 pre-commit:
 	@pre-commit run --all-files
+
+.PHONY: ipython
+ipython:
+	@docker-compose run ${APP_NAME} ipython
+
+.PHONY: bash
+bash:
+	@docker-compose run ${APP_NAME} ipython

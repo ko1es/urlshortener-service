@@ -1,35 +1,27 @@
+
 from pydantic import BaseModel
-from typing import Optional
 
 
 class DataBase(BaseModel):
     database: str
     user: str
     password: str
-    host: str = 'database'
-    port: int = 5432
-    driver: str = 'postgresql'
+    host: str
+    # port: int = 5432
+    scheme: str = 'mongodb'
 
     def get_connection_url(self) -> str:
-        return f'{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}'
+        return f'{self.scheme}://{self.user}:{self.password}@{self.host}'
 
 
 class ServiceConfig(BaseModel):
-    service_name: str = '<name>-service'
-
-
-class RabbitMQ(BaseModel):
-    user: str
-    password: str
-    port: int = 5672
-    host: str = 'rabbitmq'
-
-    def get_connection_url(self) -> str:
-        # return "amqp://guest:guest@rabbitmq:5672/"
-        return f"amqp://{self.user}:{self.password}@{self.host}:{self.port}/"
+    service_name: str = 'getmatch-urlshortener-service'
 
 
 class Config(BaseModel):
     database: DataBase
     service: ServiceConfig
-    rabbitmq: Optional[RabbitMQ] = None
+
+
+class HealthCheckStatus(BaseModel):
+    db: bool

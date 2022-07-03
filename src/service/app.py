@@ -1,7 +1,13 @@
 import falcon
-from .api import ShortURLResource
+from service.api.healthcheck import HealthCheckResource
+from service.api.shortcode import ShorCodeResource
+from service.api.shortcode import ShortCodeCreateResource
+from service.api.shortcode import ShortCodeStatsResource
 
-short_url = ShortURLResource()
 
 app = application = falcon.App()
-app.add_route('/api/url', short_url)
+
+app.add_route('/api/healthcheck', HealthCheckResource())
+app.add_route('/api/url', ShortCodeCreateResource())
+app.add_route('/api/url/{short_code}', ShorCodeResource())
+app.add_route('/api/url/{short_code}/stats', ShortCodeStatsResource())

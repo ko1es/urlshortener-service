@@ -4,8 +4,7 @@ services:
     build:
       dockerfile: conf/Dockerfile
       context: ./
-    # command: python -m service
-    command: gunicorn --reload service.app
+    command: gunicorn -b 0.0.0.0:9050 -w 2 --max-requests 1000 --timeout 30 service.app:app
     volumes:
       - type: bind
         source: ./src/
@@ -17,19 +16,19 @@ services:
       - conf/env/db.dev.env
     ports:
       - 9050:9050
-    # depends_on:
-    #   service-db:
-    #     condition: service_healthy
-  
+
   service-db:
     image: mongo
-    restart: always
+    restart: "no"
+    env_file:
+      - conf/env/db.dev.env
     networks:
       - getmatch-urlshortener-service-network
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb:/data/db
+
+volumes:
+  mongodb:
 
 networks:
   getmatch-urlshortener-service-network:
-    driver: bridge

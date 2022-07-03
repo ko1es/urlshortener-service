@@ -1,22 +1,16 @@
-from asyncpgsa import pg
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 from settings.config import CONFIG
 
 
-async def init_connection():
-    return await pg.init(
-        database=CONFIG.database.database,
-        user=CONFIG.database.user,
-        password=CONFIG.database.password,
-        host=CONFIG.database.host,
-        port=CONFIG.database.port,
-        min_size=2,
-        max_size=5
-    )
+client = MongoClient(CONFIG.database.get_connection_url())
+db = client[CONFIG.database.database]
 
 
-async def get_pg_connection(app) -> None:
-    app['connection'] = await init_connection()
+def check_connection():
+    try:
+        client.server_info()
+    except ConnectionFailure:
+        return False
 
-
-async def close_pg_connection(app):
-    await app['connection'].close()
+    return True
