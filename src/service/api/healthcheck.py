@@ -1,7 +1,7 @@
-from falcon import Request, Response
-
-from settings.models import HealthCheckStatus
+from falcon import Request
+from falcon import Response
 from settings.db import check_connection
+from settings.models import HealthCheckStatus
 
 
 class HealthCheckResource:
